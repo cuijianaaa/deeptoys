@@ -1,0 +1,49 @@
+workspace(name = "deeptoys")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+ 
+# opencv
+new_local_repository(
+    name = "opencv",
+    build_file = "third_party/opencv.BUILD",
+    path = "/usr",
+)
+
+# ncnn
+new_local_repository(
+    name = "ncnn",
+    build_file = "third_party/ncnn.BUILD",
+    path = "/usr/local/ncnn",
+)
+
+# jsoncpp
+http_archive(
+    name = "jsoncpp",
+    urls = [
+        "https://github.com/open-source-parsers/jsoncpp/archive/1.8.3.tar.gz",
+    ],
+    build_file = "@//:third_party/jsoncpp.BUILD",
+    strip_prefix = "jsoncpp-1.8.3",
+    sha256 = "3671ba6051e0f30849942cc66d1798fdf0362d089343a83f704c09ee7156604f",
+)
+
+http_archive(
+    name = "gflags",
+    urls = [
+        "https://github.com/gflags/gflags/archive/v2.2.1.tar.gz",
+    ],
+    strip_prefix = "gflags-2.2.1",
+    sha256 = "ae27cdbcd6a2f935baa78e4f21f675649271634c092b1be01469440495609d0e",
+)
+
+# glog
+http_archive(
+    name = "glog",
+    urls = [
+        "https://github.com/google/glog/archive/v0.4.0.tar.gz",
+    ],
+    build_file = "@//:third_party/glog.BUILD",
+    strip_prefix = "glog-0.4.0",
+    sha256 = "f28359aeba12f30d73d9e4711ef356dc842886968112162bc73002645139c39c",
+)
+

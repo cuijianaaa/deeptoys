@@ -1,0 +1,50 @@
+PIPELINE:
+  DATA:
+    ROOT: 'mnist'
+    SCRIPT: 'mnist'
+    LOADER: 'MnistDataset'
+    NUM_WORKERS: 1
+  MODEL:
+    TASK: classification
+    SCRIPT: 'mnist.mnist'
+    NAME: 'MnistNet'
+  TRAIN:
+    START_EPOCH: 0
+    END_EPOCH: 1
+    BATCH_SIZE: 64
+
+    OPTIMIZER: adam
+    LEARNING_RATE: 0.0001
+    WEIGHT_DECAY: 0.000000005
+    DOUBLE_BIAS: false
+    BIAS_DECAY: false
+    MOMENTUM: 0.9
+    LR_DECAY_GAMMA: 0.7
+    LR_DECAY_EPOCH: 10
+
+    CLIP_GRAD: -1
+
+    PRETRAINED: false
+    PRETRAINED_WEIGHT: '' 
+    RESUME: false
+    RESUME_EPOCH: 0
+    FINE_TUNE: false
+    FINE_TUNE_STRICT: false
+    FINE_TUNE_MODEL: ''
+    FINE_TUNE_STATE_DICT: true
+    RESULTS_ROOT: 'results'
+    SNAPSHOT_INTERVAL: 10000
+    SNAPSHOT_PREFIX: 'mnist'
+
+    EVAL_INTERVAL: 1
+    DISP_INTERVAL: 200
+
+  TEST:
+    BATCH_SIZE: 1
+    EVAL_SCRIPT: 'eval.evaluate'
+    EVAL_FUNCTION: 'evaluate'
+    EVAL_USE_CACHE: true
+    TEST_EPOCH: 1
+    VIS: true
+
+  

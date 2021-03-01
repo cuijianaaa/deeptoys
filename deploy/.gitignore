@@ -1,0 +1,5 @@
+bazel*
+bazel-bin/*
+bazel-deploy/*
+bazel-out/*
+bazel-testlogs/*

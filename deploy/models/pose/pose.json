@@ -1,0 +1,20 @@
+[
+    {
+        "type": "operator",
+        "name": "BackBone",
+        "inputs":
+        [
+            {
+                "name": "data",
+                "shape": [256, 192, 3], // h, w, c
+                "mean": [123.675, 116.28, 103.53],
+                "norm": [0.017124753831663668, 0.01750700280112045, 0.017429193899782137]
+            }
+        ],
+        "outputs": ["conv3_fwd"]
+    },
+    {
+        "type": "plugin",
+        "name": "PostProcess"
+    }
+]

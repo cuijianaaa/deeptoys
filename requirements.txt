@@ -1,0 +1,7 @@
+numpy
+opencv-python
+easydict
+pyyaml
+tensorboardX
+tensorboard
+onnx

@@ -1,0 +1,246 @@
+PIPELINE:
+  DATA:
+    ROOT: 'kitti'
+    SCRIPT: 'kitti_object'
+    LOADER: 'kittiObjectDataset'
+    NUM_WORKERS: 1
+  MODEL:
+    TASK: detection
+    SCRIPT: 'faster_rcnn_lidar3d.bv_net'
+    NAME: 'bv_net'
+  TRAIN:
+    START_EPOCH: 0
+    END_EPOCH: 15
+    BATCH_SIZE: 4
+
+    OPTIMIZER: adam
+    LEARNING_RATE: 0.00005
+    WEIGHT_DECAY: 0.0005
+    DOUBLE_BIAS: false
+    BIAS_DECAY: false
+    MOMENTUM: 0.9
+    LR_DECAY_GAMMA: 0.1
+    LR_DECAY_EPOCH: 10
+
+    CLIP_GRAD: -1
+
+    PRETRAINED: False
+    PRETRAINED_WEIGHT: '' 
+    RESUME: false
+    RESUME_EPOCH: 0
+    FINE_TUNE: false
+    FINE_TUNE_STRICT: false
+    FINE_TUNE_MODEL: ''
+    FINE_TUNE_STATE_DICT: true
+    SNAPSHOT_INTERVAL: 10000
+    SNAPSHOT_PREFIX: results/snapshots/bv_net
+
+    EVAL_INTERVAL: -1
+    DISP_INTERVAL: 200
+
+  VAL:
+    BATCH_SIZE: 4
+  TEST:
+    BATCH_SIZE: 4
+MODEL:
+  DETECTION: 
+    CLASSES: 
+      - __background__
+      - car
+    WITH_FC6: true
+    RESNET:
+      FIX_BN_AFFINE: true
+      FIX_BN: true
+    FORMAT_NAME: true
+    WITH_DROPOUT: true
+    BN_MOMENTUM: 0.1
+    CLASS_AGNOSTIC: false
+    POOLING_SIZE: 7
+    CROP_RESIZE_WITH_MAX_POOL: true
+    LIGHT_HEAD: true
+    PSROI_ALIGN: true
+    PSROI_ALIGN_TYPE: 1
+    POOLING_MODE: crop
+    IM_LOG: false
+    RCNN_CLS_WEIGHT: 1.0
+    RCNN_BOX_WEIGHT: 1.0
+    TRUNCATED: false
+    PRETRAINED: false
+    PRETRAINED_WEIGHT: ''
+    FC_CHANNEL: 512
+    NUM_LAYERS: 0
+    NET_TYPE: net1
+    ###########proposal target config
+    BBOX_NORMALIZE_MEANS:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+    BBOX_NORMALIZE_STDS:
+      - 0.1
+      - 0.1
+      - 0.2
+      - 0.2
+    BBOX_INSIDE_WEIGHTS:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+    INCLUDE_GTBOX: false
+    RPN_BATCH_SIZE: 128
+    FG_FRACTION: 0.25
+    BBOX_NORMALIZE_TARGETS_PRECOMPUTED: true
+    FG_THRESH: 0.7
+    BG_THRESH_HI: 0.7 # 0.5 default 
+    BG_THRESH_LO: 0.0
+
+    ###########rpn config
+    ANCHOR_SCALES:
+      - 2
+      - 4
+      - 8
+      - 16
+      - 32
+    ANCHOR_RATIOS:
+      - 0.5
+      - 1
+      - 2
+    FEAT_STRIDE:
+      - 16
+
+    RPN_CLS_WEIGHT: 1.0
+    RPN_BOX_WEIGHT: 1.0
+    ## proposal config
+    RPN_PRE_NMS_TOP_N: 6000
+    RPN_POST_NMS_TOP_N: 300
+    RPN_NMS_THRESH: 0.7
+    RPN_MIN_SIZE: 5
+    USE_GPU_NMS: true
+
+    ## anchor target layer config
+    RPN_CLOBBER_POSITIVES: false
+    RPN_NEGATIVE_OVERLAP: 0.3
+    WITH_IGNORE: false
+    RPN_IGNORE_OVERLAP: 0.5
+    RPN_POSITIVE_OVERLAP: 0.7
+    RPN_BBOX_OVERLAP: -1.0
+    RPN_FG_FRACTION: 0.5
+    RPN_BATCHSIZE: 256
+    RPN_BBOX_INSIDE_WEIGHTS:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+    RPN_POSITIVE_WEIGHT: -1.0
+  
+  LIDAR_BV3D_DET:   
+    CLASSES: ['__background__', 'car']
+    CLASS_AGNOSTIC: True
+    LIGHT_HEAD: True
+    ROI_CONV: False
+    USE_IGNORE: True
+    USE_FILTER: False
+
+    FC_CHANNEL: 1024
+    FC1_CHANNEL: 0
+    FC2_CHANNEL: 0
+    LIGHT_HEAD: True
+    PSROI_ALIGN: True
+    ROI_POOL_TYPE: 'maxpool'
+    # Birdview projection parameters
+    BV_PARAM:
+      # height of input birdview feature map
+      HEIGHT: 800
+      # width of input birdview feature map
+      WIDTH: 704
+      # Y offset
+      ORI_Y: 40.0
+      # X offset
+      ORI_X: 0.0
+      # Y resolution
+      RES_Y: 0.1
+      # X resolution
+      RES_X: 0.1
+      # depth (channel) of input voxel feature
+      DEPTH: 10
+      # Z offset
+      ORI_Z: 0.0
+      # Z resolution
+      RES_Z: 0.4
+      # camera height
+      MIN_HEIGHT: -2.0
+      # max height
+      MAX_HEIGHT: 2.0
+      # hand-crafted feature types
+      NUM_SLICES: 1
+      USE_HEIGHT_SLICE: True
+      USE_MEAN_HEIGHT: True
+      USE_MAX_HEIGHT: False
+      USE_INTENSITY_SLICE: True
+      USE_MEAN_INTENSITY: True
+      USE_TOP_INTENSITY: False
+      USE_DENSITY: True
+      USE_NONEMPTY: True
+      USE_DISTANCE: True
+      USE_DIRECTION: True
+      USE_RGB_SLICE: False
+      OUTPUT_SCORE: True
+      RM_EMPTY_ANCHORS: False
+      USE_CENTER: False
+    BIRDVIEW:
+      USE_VOXEL: False
+      USE_POINTNET: False
+      ANCHOR_SIZES: [[3.9,1.6], [1.6,3.9]]  # meter
+      NUM_ANCHORS: 2
+      IMU_HEIGHT: 1.73   # meter
+      RPN_FEAT_STRIDE: 2
+      RCNN_FEAT_STRIDE: 2
+      PRECOMPUTED: False
+      PROPOSAL_TYPE: 'corner'    # 'corner', 'center'
+      MULTI_BIN_START: 1.0
+      ANGLE_TYPE: 'global'
+    # anchor target config
+    ANCHOR_ORIENTED_OVERLAP: False
+
+    # rpn config
+    RPN_ADAPTIVE_THRESH: True
+    RPN_POSITIVE_HI: 0.7
+    RPN_POSITIVE_LO: 0.3
+    RPN_NEGATIVE_HI: 0.6
+    RPN_NEGATIVE_LO: 0.2
+    # If an anchor statisfied by positive and negative conditions set to negative
+    RPN_CLOBBER_POSITIVES: False
+    # Max number of foreground examples
+    RPN_FG_FRACTION: 0.5
+    # Total number of examples
+    RPN_BATCHSIZE: 256
+    # Give the positive RPN examples weight of p * 1 / {num positives}
+    # and give negatives a weight of (1 - p)
+    # Set to -1.0 to use uniform example weighting
+    RPN_POSITIVE_WEIGHT: -1.0
+
+    ## proposal 3d config
+    # NMS threshold used on RPN proposals
+    RPN_NMS_THRESH: 0.7
+    # Number of top scoring boxes to keep before apply NMS to RPN proposals
+    RPN_PRE_NMS_TOP_N: 12000
+    # Number of top scoring boxes to keep after applying NMS to RPN proposals
+    RPN_POST_NMS_TOP_N: 2000
+    # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
+    RPN_MIN_SIZE: 8
+    ## Use oriented corner box nms for rpn
+    RPN_ORIENTED_NMS: False
+    USING_PY_METHOD: False
+    RPN_CONV: False
+
+    ## rcnn config
+    RCNN_CLS_WEIGHT: 1.0
+    RCNN_BBOX_WEIGHT: 1.0
+
+  CLASSIFICATION: ''
+  PARSING: ''
+  PRED: ''
+  STEREO: ''
+  TRACKING: ''
+  
+  

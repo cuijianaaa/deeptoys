@@ -1,0 +1,18 @@
+[
+    {
+        "type": "operator",
+        "name": "BackBone",
+        "inputs":
+        [
+            {
+                "name": "0",
+                "shape": [28, 28, 1] // h, w, c
+            }
+        ],
+        "outputs": ["22"]
+    },
+    {
+        "type": "plugin",
+        "name": "PostProcess"
+    }
+]
